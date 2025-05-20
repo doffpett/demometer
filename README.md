@@ -45,3 +45,15 @@ Kan videreutvikles med flere effekter, farger, dashboards og integrasjoner.
 
 Oppsummering
 Avo Demometer er et eksempel på hvordan fysiske, digitale og skybaserte løsninger kan spille sammen for å skape både innsikt, synlighet og engasjement på arbeidsplassen – hele veien fra CRM, via automasjon, til fysisk visualisering og selvhelbredende teknologi.
+
+## Hente access token fra Tuya med Node.js
+
+For å hente en access token programmatisk kan du bruke skriptet `get_tuya_token.js` i dette repoet. Sett miljøvariablene `TUYA_CLIENT_ID` og `TUYA_CLIENT_SECRET` før du kjører skriptet.
+
+```bash
+export TUYA_CLIENT_ID=din_client_id
+export TUYA_CLIENT_SECRET=din_client_secret
+node get_tuya_token.js
+```
+
+Skriptet beregner signaturen i henhold til Tuyas dokumentasjon og sender forespørselen til `https://openapi.tuya{region}.com/v1.0/token?grant_type=1`. Regionen kan settes via `TUYA_REGION` (f.eks. `eu`, `us` eller `cn`).

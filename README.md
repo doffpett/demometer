@@ -48,7 +48,15 @@ Avo Demometer er et eksempel på hvordan fysiske, digitale og skybaserte løsnin
 
 ## Hente access token fra Tuya med Node.js
 
-For å hente en access token programmatisk kan du bruke skriptet `get_tuya_token.js` i dette repoet. Sett miljøvariablene `TUYA_CLIENT_ID` og `TUYA_CLIENT_SECRET` før du kjører skriptet.
+For å hente en access token programmatisk kan du bruke skriptet `get_tuya_token.js` i dette repoet. Miljøvariablene kan legges i en `.env`-fil. Kopier først eksempelfilen og fyll inn dine verdier:
+
+```bash
+cp .env.example .env
+# rediger .env og legg inn dine Tuya-verdier
+node get_tuya_token.js
+```
+
+Du kan også sette variablene direkte i miljøet før du kjører skriptet:
 
 ```bash
 export TUYA_CLIENT_ID=din_client_id

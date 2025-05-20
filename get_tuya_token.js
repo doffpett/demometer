@@ -1,5 +1,27 @@
 const crypto = require('crypto');
 const https = require('https');
+const fs = require('fs');
+const path = require('path');
+
+// Load environment variables from .env if it exists
+try {
+  const envPath = path.join(__dirname, '.env');
+  if (fs.existsSync(envPath)) {
+    const envContent = fs.readFileSync(envPath, 'utf8');
+    envContent.split(/\r?\n/).forEach(line => {
+      const match = line.match(/^\s*([A-Za-z0-9_]+)\s*=\s*(.*)\s*$/);
+      if (match) {
+        const key = match[1];
+        const value = match[2];
+        if (!process.env[key]) {
+          process.env[key] = value;
+        }
+      }
+    });
+  }
+} catch (err) {
+  console.warn('Could not load .env file:', err.message);
+}
 
 const region = process.env.TUYA_REGION || 'eu';
 const clientId = process.env.TUYA_CLIENT_ID;

@@ -1,0 +1,201 @@
+'stringToSign:\nGET\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\n\n/v1.0/token?grant_type=1'
+'str to sign:', 'whfgg7jn3v8h737fkpng1747735884095GET\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\n\n/v1.0/token?grant_type=1'
+'clientId:', 'whfgg7jn3v8h737fkpng'
+'t:', '1747735884095', 'nonce:', ''
+'time_diff:', 0
+'httpMethod:', 'GET'
+'url:', '/v1.0/token?grant_type=1'
+'Computed tuya_sign:', 'BF1DCB320B25E2BB3672E2D11C8368BDEF9FB6DA73798343C965D7F22791D5C7'
+GET https://openapi.tuyaeu.com/v1.0/token?grant_type=1: {
+  "Network": {
+    "addresses": {
+      "local": {
+        "address": "172.17.0.2",
+        "family": "IPv4",
+        "port": 38326
+      },
+      "remote": {
+        "address": "52.29.137.228",
+        "family": "IPv4",
+        "port": 443
+      }
+    },
+    "tls": {
+      "reused": false,
+      "authorized": true,
+      "authorizationError": null,
+      "cipher": {
+        "name": "TLS_AES_256_GCM_SHA384",
+        "standardName": "TLS_AES_256_GCM_SHA384",
+        "version": "TLSv1.3"
+      },
+      "protocol": "TLSv1.3",
+      "ephemeralKeyInfo": {
+        "type": "ECDH",
+        "name": "X25519",
+        "size": 253
+      },
+      "peerCertificate": {
+        "subject": {
+          "commonName": "*.tuyaeu.com",
+          "alternativeNames": "DNS:*.tuyaeu.com, DNS:tuyaeu.com"
+        },
+        "issuer": {
+          "country": "US",
+          "stateOrProvince": "Arizona",
+          "locality": "Scottsdale",
+          "organization": "GoDaddy.com, Inc.",
+          "organizationalUnit": "http://certs.godaddy.com/repository/",
+          "commonName": "Go Daddy Secure Certificate Authority - G2"
+        },
+        "validFrom": "Aug 19 05:47:40 2024 GMT",
+        "validTo": "Sep 20 05:47:40 2025 GMT",
+        "fingerprint": "FA:CD:CC:42:5E:C9:AD:4D:FC:0F:37:68:A9:01:E0:C4:10:ED:C7:23",
+        "serialNumber": "85429AACB4EECF23"
+      }
+    }
+  },
+  "Request Headers": {
+    "client_id": "whfgg7jn3v8h737fkpng",
+    "t": "1747735884095",
+    "sign_method": "HMAC-SHA256",
+    "sign": "{{tuya_sign}}",
+    "user-agent": "PostmanRuntime/7.44.0",
+    "accept": "*/*",
+    "cache-control": "no-cache",
+    "postman-token": "1d3c39ff-c844-4ab8-8d2e-45b5b381d2f7",
+    "host": "openapi.tuyaeu.com",
+    "accept-encoding": "gzip, deflate, br",
+    "connection": "keep-alive"
+  },
+  "Response Headers": {
+    "content-type": "application/json;charset=UTF-8",
+    "content-length": "109",
+    "connection": "keep-alive",
+    "date": "Tue, 20 May 2025 10:11:25 GMT",
+    "access-control-allow-credentials": "true",
+    "access-control-allow-headers": [
+      "",
+      "access_token,Content-Type"
+    ],
+    "access-control-allow-methods": [
+      "POST",
+      "OPTIONS",
+      "GET",
+      "DELETE",
+      "PUT"
+    ],
+    "access-control-allow-origin": "https://iot.tuya.com,https://platform.tuya.com",
+    "gateway-info": "highway",
+    "server": "Sec",
+    "strict-transport-security": "max-age=31536000"
+  },
+  "Response Body": "{\"code\":1004,\"msg\":\"sign invalid\",\"success\":false,\"t\":1747735885498,\"tid\":\"c9aa80c6356211f0b7363af2f1e8cfff\"}"
+}
+'Response body:', { code: 1004,
+  msg: 'sign invalid',
+  success: false,
+  t: 1747735885498,
+  tid: 'c9aa80c6356211f0b7363af2f1e8cfff' }
+'stringToSign:\nGET\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\n\n/v1.0/token?grant_type=1'
+'str to sign:', 'whfgg7jn3v8h737fkpng1747735886101GET\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\n\n/v1.0/token?grant_type=1'
+'clientId:', 'whfgg7jn3v8h737fkpng'
+'t:', '1747735886101', 'nonce:', ''
+'time_diff:', 0
+'httpMethod:', 'GET'
+'url:', '/v1.0/token?grant_type=1'
+'Computed tuya_sign:', 'D17C69F09BDABAE1C6FCF8BDC8E187ACF76CB1EAB033866DE408689842CBCCA7'
+GET https://openapi.tuyaeu.com/v1.0/token?grant_type=1: {
+  "Network": {
+    "addresses": {
+      "local": {
+        "address": "172.17.0.2",
+        "family": "IPv4",
+        "port": 38246
+      },
+      "remote": {
+        "address": "52.29.137.228",
+        "family": "IPv4",
+        "port": 443
+      }
+    },
+    "tls": {
+      "reused": false,
+      "authorized": true,
+      "authorizationError": null,
+      "cipher": {
+        "name": "TLS_AES_256_GCM_SHA384",
+        "standardName": "TLS_AES_256_GCM_SHA384",
+        "version": "TLSv1.3"
+      },
+      "protocol": "TLSv1.3",
+      "ephemeralKeyInfo": {
+        "type": "ECDH",
+        "name": "X25519",
+        "size": 253
+      },
+      "peerCertificate": {
+        "subject": {
+          "commonName": "*.tuyaeu.com",
+          "alternativeNames": "DNS:*.tuyaeu.com, DNS:tuyaeu.com"
+        },
+        "issuer": {
+          "country": "US",
+          "stateOrProvince": "Arizona",
+          "locality": "Scottsdale",
+          "organization": "GoDaddy.com, Inc.",
+          "organizationalUnit": "http://certs.godaddy.com/repository/",
+          "commonName": "Go Daddy Secure Certificate Authority - G2"
+        },
+        "validFrom": "Aug 19 05:47:40 2024 GMT",
+        "validTo": "Sep 20 05:47:40 2025 GMT",
+        "fingerprint": "FA:CD:CC:42:5E:C9:AD:4D:FC:0F:37:68:A9:01:E0:C4:10:ED:C7:23",
+        "serialNumber": "85429AACB4EECF23"
+      }
+    }
+  },
+  "Request Headers": {
+    "client_id": "whfgg7jn3v8h737fkpng",
+    "t": "1747735886101",
+    "sign_method": "HMAC-SHA256",
+    "sign": "D17C69F09BDABAE1C6FCF8BDC8E187ACF76CB1EAB033866DE408689842CBCCA7",
+    "user-agent": "PostmanRuntime/7.44.0",
+    "accept": "*/*",
+    "cache-control": "no-cache",
+    "postman-token": "2e1c2eda-a13a-4634-9cd7-22787a5ded88",
+    "host": "openapi.tuyaeu.com",
+    "accept-encoding": "gzip, deflate, br",
+    "connection": "keep-alive"
+  },
+  "Response Headers": {
+    "content-type": "application/json;charset=UTF-8",
+    "content-length": "235",
+    "connection": "keep-alive",
+    "date": "Tue, 20 May 2025 10:11:27 GMT",
+    "access-control-allow-credentials": "true",
+    "access-control-allow-headers": [
+      "",
+      "access_token,Content-Type"
+    ],
+    "access-control-allow-methods": [
+      "POST",
+      "OPTIONS",
+      "GET",
+      "DELETE",
+      "PUT"
+    ],
+    "access-control-allow-origin": "https://iot.tuya.com,https://platform.tuya.com",
+    "gateway-info": "highway",
+    "server": "Sec",
+    "strict-transport-security": "max-age=31536000"
+  },
+  "Response Body": "{\"result\":{\"access_token\":\"6a9ed7ab69d085537ce03e4b60673719\",\"expire_time\":6481,\"refresh_token\":\"af102f641652a7584b764a95979bb003\",\"uid\":\"bay1745412670071oP9K\"},\"success\":true,\"t\":1747735887140,\"tid\":\"caa34fcb356211f0a5b45285f2aacdc1\"}"
+}
+'Response body:', { result: 
+   { access_token: '6a9ed7ab69d085537ce03e4b60673719',
+     expire_time: 6481,
+     refresh_token: 'af102f641652a7584b764a95979bb003',
+     uid: 'bay1745412670071oP9K' },
+  success: true,
+  t: 1747735887140,
+  tid: 'caa34fcb356211f0a5b45285f2aacdc1' }

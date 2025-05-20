@@ -1,0 +1,20 @@
+const jsonData = pm.response.json();
+console.log("Response body:", jsonData);
+
+//juster tidsforskjeller mellom server og meg
+if (jsonData.code === 1013) {
+  const serverT = jsonData.t;                      // serverens tidsstempel
+  const clientT = parseInt(pm.environment.get("t")); 
+  const offset  = serverT - clientT;
+  pm.environment.set("time_diff", offset);
+  console.log("Synkronisert klokke, time_diff =", offset);
+}
+//lagrer tokens for videre bruk
+if (pm.response.json().success) {
+  pm.environment.set("access_token", pm.response.json().result.access_token);
+  pm.environment.set("refresh_token", pm.response.json().result.refresh_token);
+}
+
+//Reset de variablene i Postman
+pm.environment.unset("tuya_sign");
+pm.environment.unset("TUYA_NONCE");

@@ -80,3 +80,15 @@ node tuya_request.js GET /v1.0/devices
 ```
 
 Du kan også sende en JSON-body ved å oppgi den som tredje argument. Signeringen skjer automatisk basert på parametrene du oppgir.
+
+## Eksempel: hent enheter i et space
+
+Filen `fetch_tuya_space_devices.js` viser et enkelt kall som bruker miljøvariablene `TUYA_ACCESS_TOKEN` og `TUYA_REFRESH_TOKEN`. Skriptet henter en liste over enheter fra Tuya og logger svaret.
+
+```bash
+export TUYA_CLIENT_ID=din_client_id
+export TUYA_CLIENT_SECRET=din_client_secret
+export TUYA_ACCESS_TOKEN=din_access_token
+export TUYA_REFRESH_TOKEN=din_refresh_token
+node fetch_tuya_space_devices.js
+```

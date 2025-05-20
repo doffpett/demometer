@@ -65,3 +65,18 @@ node get_tuya_token.js
 ```
 
 Skriptet beregner signaturen i henhold til Tuyas dokumentasjon og sender forespørselen til `https://openapi.tuya{region}.com/v1.0/token?grant_type=1`. Regionen kan settes via `TUYA_REGION` (f.eks. `eu`, `us` eller `cn`).
+
+## Kalle Tuya API med Node.js
+
+Når du allerede har en `access_token`, kan du bruke skriptet `tuya_request.js` til å sende egne API-kall. Skriptet tar HTTP-metoden og stien (med evt. query-parametre) som argumenter.
+
+Sett miljøvariablene `TUYA_CLIENT_ID`, `TUYA_CLIENT_SECRET` og `TUYA_ACCESS_TOKEN` først. `TUYA_REGION` kan også settes dersom du bruker et annet område enn `eu`.
+
+```bash
+export TUYA_CLIENT_ID=din_client_id
+export TUYA_CLIENT_SECRET=din_client_secret
+export TUYA_ACCESS_TOKEN=din_access_token
+node tuya_request.js GET /v1.0/devices
+```
+
+Du kan også sende en JSON-body ved å oppgi den som tredje argument. Signeringen skjer automatisk basert på parametrene du oppgir.

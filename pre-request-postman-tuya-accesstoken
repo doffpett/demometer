@@ -1,0 +1,66 @@
+// =======================
+// Complete Pre-request Script
+// =======================
+
+// 0) Hjelpefunksjon for å konvertere ArrayBuffer til hex-streng
+function buf2hex(buffer) {
+  return Array.prototype.map
+    .call(new Uint8Array(buffer), b => b.toString(16).padStart(2, "0"))
+    .join("");
+}
+
+// 1) Hent offset for klokkesynk (0 første gang)
+const diff = parseInt(pm.environment.get("time_diff"), 10) || 0;
+
+// 2) Hent miljø-variabler (bruk nøyaktige navn fra ditt environment)
+const clientId        = pm.environment.get("TUYA_CLIENT_ID");
+const secret          = pm.environment.get("TUYA_CLIENT_SECRET");
+const nonce           = pm.environment.get("TUYA_NONCE")         || "";
+const optionalKey     = pm.environment.get("TUYA_SIGNATURE_KEY") || ""; // hvis i bruk
+const httpMethod      = pm.request.method.toUpperCase();
+const urlPathAndQuery = pm.request.url.getPathWithQuery();
+
+// 3) Generer justert timestamp og lagre tilbake til environment
+const t = (Date.now() + diff).toString();
+pm.environment.set("t", t);
+
+// 4) Bygg Content-SHA256 (her tom body, ellers beregn via subtle.digest)
+const NULL_HASH = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855";
+const contentSha256 = NULL_HASH;
+
+// 5) Bygg stringToSign i henhold til dokumentasjonen:
+//    HTTPMethod + "\n" + Content-SHA256 + "\n" + Optional_Signature_key + "\n" + URL
+const stringToSign = [
+  httpMethod,
+  contentSha256,
+  optionalKey,
+  urlPathAndQuery
+].join("\n");
+console.log("stringToSign:\n" + stringToSign);
+
+// 6) Bygg str som skal signeres:
+//    client_id + t + nonce + stringToSign
+const str = clientId + t + nonce + stringToSign;
+console.log("str to sign:", str);
+
+// 7) Signer str med HMAC-SHA256 via Web Crypto API
+const enc     = new TextEncoder();
+const keyData = enc.encode(secret);
+const msgData = enc.encode(str);
+
+crypto.subtle
+  .importKey("raw", keyData, { name: "HMAC", hash: "SHA-256" }, false, ["sign"])
+  .then(key => crypto.subtle.sign("HMAC", key, msgData))
+  .then(sig => {
+    const signature = buf2hex(sig).toUpperCase();
+    console.log("Computed tuya_sign:", signature);
+    pm.environment.set("tuya_sign", signature);
+  })
+  .catch(err => console.error("Signing error:", err));
+
+// 8) Valgfri debug-logging
+console.log("clientId:", clientId);
+console.log("t:", t, "nonce:", nonce);
+console.log("time_diff:", diff);
+console.log("httpMethod:", httpMethod);
+console.log("url:", urlPathAndQuery);

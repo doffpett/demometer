@@ -62,6 +62,12 @@ bool backupTemporaryFalling = false;
 // Default er at demo mode er aktiv, dvs. timer-trigget fallende pixel kjøres.
 bool demoMode = true;
 
+// --- Variabler for nettverkssjekk ---
+bool networkCheckEnabled = false;         // Default er av
+unsigned long lastNetworkCheck = 0;       // Tidspunkt for siste sjekk
+int networkPixelIndex = 1;                // Starter på pixel 1
+uint32_t networkPixels[PIXEL_COUNT];      // Lager fargene for nettverkssjekk
+
 // Funksjon for å generere en tilfeldig farge (brukes for eksterne eventer).
 uint32_t getRandomColor() {
     uint8_t r = random(0, 256);
@@ -190,6 +196,18 @@ int demoModeFunction(String modeStr) {
     return demoMode ? 1 : 0; // Returnerer 1 for "on", 0 for "off"
 }
 
+// --- Nettverkssjekk funksjon ---
+// Parametere: "on" eller "off". Default er av.
+int networkCheckFunction(String modeStr) {
+    if(modeStr == "on") {
+        networkCheckEnabled = true;
+    } else if(modeStr == "off") {
+        networkCheckEnabled = false;
+    }
+    Particle.publish("net_check_status", networkCheckEnabled ? "on" : "off", PRIVATE);
+    return networkCheckEnabled ? 1 : 0;
+}
+
 void setup() {
     strip.begin();
     strip.show(); // Slår av alle LED-er ved oppstart.
@@ -211,6 +229,7 @@ void setup() {
     Particle.function("set_brightness", setBrightness);
     Particle.function("winning", winningFunction);
     Particle.function("demo_mode", demoModeFunction);
+    Particle.function("net_check", networkCheckFunction);
 }
 
 void loop() {
@@ -273,6 +292,23 @@ void loop() {
         simulationInProgress = false; // Markér simulering som ferdig
         Particle.publish("simulationComplete", "true", PRIVATE); // Varsle Particle API
     }
+
+    // --- Nettverkssjekk ---
+    if (networkCheckEnabled && (currentMillis - lastNetworkCheck >= 30000)) {
+        TCPClient client;
+        bool ok = client.connect("google.com", 80);
+        if (ok) {
+            networkPixels[networkPixelIndex] = strip.Color(0, 255, 0); // Grønn
+            client.stop();
+        } else {
+            networkPixels[networkPixelIndex] = strip.Color(255, 0, 0); // Rød
+        }
+        networkPixelIndex++;
+        if (networkPixelIndex >= PIXEL_COUNT) {
+            networkPixelIndex = 1;
+        }
+        lastNetworkCheck = currentMillis;
+    }
     
     // --- Animer den fallende pikselen (gjelder for indekser 1 til PIXEL_COUNT-1) ---
     if (fallingPixel != -1) {
@@ -294,9 +330,13 @@ void loop() {
     }
     
     // --- Oppdater LED-strippen ---
-    // Sett alle piksler fra 1 til PIXEL_COUNT-1 basert på fixedPixels.
+    // Sett alle piksler fra 1 til PIXEL_COUNT-1 basert på fixedPixels og nettverkssjekk.
     for (int i = 1; i < PIXEL_COUNT; i++) {
-        strip.setPixelColor(i, fixedPixels[i]);
+        uint32_t color = fixedPixels[i];
+        if (networkPixels[i] != 0) {
+            color = networkPixels[i];
+        }
+        strip.setPixelColor(i, color);
     }
     // Dersom en fallende piksel er aktiv (og ikke på indeks 0, som er reservert), vis den.
     if (fallingPixel != -1 && fallingPixel != 0) {

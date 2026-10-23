@@ -6,6 +6,6 @@ mkdir -p "$repo_dir/build/host-tests"
   -I"$repo_dir/tests/host" "$repo_dir/tests/host/test.cpp" \
   -o "$repo_dir/build/host-tests/test"
 for scenario in watchdog watchdog-init-failure watchdog-start-failure \
-  offline-recovery offline-rollover telemetry animations-and-storage 60-days-idle; do
+  offline-recovery offline-rollover telemetry animations-and-storage live-color live-color-timeout 60-days-idle; do
   "$repo_dir/build/host-tests/test" "$scenario"
 done

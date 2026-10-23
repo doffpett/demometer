@@ -2,11 +2,13 @@
 #include "neopixel.h"
 #include <string.h>
 #include <limits.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 SYSTEM_MODE(AUTOMATIC);
 SYSTEM_THREAD(ENABLED);
 
-#define FIRMWARE_VERSION "2026-10-23-r5"
+#define FIRMWARE_VERSION "2026-10-23-r6"
 
 #if (PLATFORM_ID == 32)
   #define PIXEL_PIN SPI1
@@ -31,6 +33,7 @@ SYSTEM_THREAD(ENABLED);
 #define CLOUD_OFFLINE_RESET_MS (15UL * 60UL * 1000UL)
 #define WATCHDOG_TIMEOUT_MS 60000
 #define HARDWARE_WATCHDOG_TIMEOUT_MS 90000
+#define LIVE_COLOR_TIMEOUT_MS 15000
 
 // Report these through reset_data after a software recovery reset.
 #define RESET_DATA_APP_WATCHDOG 1
@@ -52,6 +55,10 @@ struct PersistedState {
 Adafruit_NeoPixel strip(PIXEL_COUNT, PIXEL_PIN, PIXEL_TYPE);
 
 String firmwareVersion = FIRMWARE_VERSION;
+String displayState = "meter";
+bool liveColorMode = false;
+uint32_t liveColor = 0;
+system_tick_t lastLiveColorMs = 0;
 uint32_t fixedPixels[PIXEL_COUNT];
 
 int litPixels = 0;
@@ -284,10 +291,61 @@ void paintFallingPixel() {
     }
 }
 
+void showStripFrame() {
+    // Only the display is overridden. The counter and its animations still advance.
+    if (liveColorMode) {
+        for (int i = 0; i < PIXEL_COUNT; ++i) strip.setPixelColor(i, liveColor);
+    }
+    strip.show();
+}
+
 void showNormalFrame() {
     paintFixedPixels();
     paintFallingPixel();
-    strip.show();
+    showStripFrame();
+}
+
+int setLiveColor(String args) {
+    args.trim();
+    if (args == "off") {
+        liveColorMode = false;
+        displayState = "meter";
+        showNormalFrame();
+        return 0;
+    }
+
+    // Reject malformed/overflowing values instead of silently changing the color.
+    const char* cursor = args.c_str();
+    int rgb[3];
+    for (int i = 0; i < 3; ++i) {
+        char* end = nullptr;
+        long value = strtol(cursor, &end, 10);
+        if (end == cursor || value < 0 || value > 255) return -1;
+        if (i < 2 ? *end != ',' : *end != '\0') return -1;
+        rgb[i] = (int)value;
+        cursor = i < 2 ? end + 1 : end;
+    }
+
+    uint32_t color = strip.Color(rgb[0], rgb[1], rgb[2]);
+    bool changed = !liveColorMode || color != liveColor;
+    liveColorMode = true;
+    liveColor = color;
+    lastLiveColorMs = millis();
+    if (changed) {
+        char label[8];
+        snprintf(label, sizeof(label), "#%02x%02x%02x", rgb[0], rgb[1], rgb[2]);
+        displayState = label;
+        showNormalFrame();
+    }
+    return 1;
+}
+
+void maintainLiveColor() {
+    if (liveColorMode && millis() - lastLiveColorMs >= LIVE_COLOR_TIMEOUT_MS) {
+        liveColorMode = false;
+        displayState = "meter";
+        showNormalFrame();
+    }
 }
 
 void setLitPixels(int count, bool persistNow) {
@@ -428,6 +486,7 @@ void setup() {
     updateBatteryTelemetry();
 
     Particle.variable("fw", firmwareVersion);
+    Particle.variable("display", displayState);
     Particle.variable("lit_pixels", litPixels);
     Particle.variable("brightness", brightnessValue);
     Particle.variable("pending", pendingSimulate);
@@ -454,6 +513,7 @@ void setup() {
     Particle.function("winning", winningFunction);
     Particle.function("demo_mode", demoModeFunction);
     Particle.function("ping", pingFunction);
+    Particle.function("set_color", setLiveColor);
 }
 
 void loop() {
@@ -461,6 +521,7 @@ void loop() {
 #if (PLATFORM_ID == 32)
     if (hardwareWatchdogStatus == 1) Watchdog.refresh();
 #endif
+    maintainLiveColor();
     updateTelemetry();
     maintainCloudRecovery();
     flushStateIfNeeded();
@@ -478,7 +539,7 @@ void loop() {
                 else strip.setPixelColor(i, 0);
             }
             strip.setPixelColor(0, 0);
-            strip.show();
+            showStripFrame();
         }
         return;
     }

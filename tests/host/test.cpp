@@ -20,7 +20,7 @@ int main(int argc, char** argv) {
     setup();
     assert(ApplicationWatchdog::stack >= 1536);
     assert(ApplicationWatchdog::interval == 60000);
-    assert(Particle.variables.size() == 19);
+    assert(Particle.variables.size() == 20);
 
     if (scenario == "watchdog") {
         assert(hardwareWatchdogStatus == 1 && Watchdog.interval == 90000);
@@ -66,6 +66,36 @@ int main(int argc, char** argv) {
         loadPersistedState(); assert(litPixels == 16 && brightnessValue == 80);
         setFixed("999"); assert(litPixels == 51 && simulateFunction("2147483647") == 0);
         resetState(""); assert(litPixels == 0);
+    } else if (scenario == "live-color") {
+        setFixed("13"); setBrightness("80");
+        int writes = EEPROM.writes;
+        assert(setLiveColor("25,122,157") == 1);
+        assert(displayState == "#197a9d");
+        for (auto pixel : strip.pixels) assert(pixel == 0x197a9d);
+        assert(litPixels == 13 && brightnessValue == 80);
+        assert(EEPROM.writes == writes);
+        for (const char* invalid : {"", "-1,2,3", "256,2,3", "1,2", "1,2,3,4", "x,2,3", "999999999999999999999,2,3"}) {
+            assert(setLiveColor(invalid) == -1);
+            assert(displayState == "#197a9d");
+        }
+        winningFunction(""); simulateFunction("1");
+        for (int i = 0; i < 1100; ++i) {
+            clockMs += 10; loop();
+            for (auto pixel : strip.pixels) assert(pixel == 0x197a9d);
+        }
+        assert(litPixels == 14 && pendingSimulate == 0);
+        assert(setLiveColor("off") == 0);
+        assert(displayState == "meter" && !liveColorMode);
+        assert(strip.pixels[0] == 0 && strip.pixels[1] != 0 && strip.pixels[15] == 0);
+    } else if (scenario == "live-color-timeout") {
+        setFixed("13");
+        clockMs = UINT32_MAX - 5000ULL;
+        assert(setLiveColor("25,122,157") == 1);
+        clockMs += 14999; maintainLiveColor(); assert(liveColorMode);
+        assert(setLiveColor("25,122,157") == 1); // refresh without a color change
+        clockMs += 14999; maintainLiveColor(); assert(liveColorMode);
+        clockMs += 1; maintainLiveColor(); assert(!liveColorMode);
+        assert(litPixels == 13 && strip.pixels[14] == 0 && displayState == "meter");
     } else if (scenario == "60-days-idle") {
         setFixed("13"); setBrightness("80");
         int writes = EEPROM.writes;

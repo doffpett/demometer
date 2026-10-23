@@ -1,0 +1,33 @@
+Live-farge på demometeret
+
+Åpne Start live.command fra Finder for å slå på.
+Åpne Stopp live.command for å gå tilbake til vanlig demo-telling.
+Status.command viser om programmet kjører og hvilken farge som sist ble sendt.
+
+Hold ølboksen nær Logitech BRIO-kameraet, midt i øvre halvdel av bildet.
+Målefeltet dekker 33–62 % av bredden og 8–42 % av høyden, målt fra øverst
+til venstre. Dette holder LED-stripen og bordet utenfor målingen. Programmet
+gjenkjenner ikke bestemte ølmerker eller objekttyper. Reflekser og belysning
+påvirker fargen. LED-fargene gjøres mer mettede for å gi tydelige blå/grønne
+og andre hovedfarger, fremfor en nøyaktig fotografisk RGB-gjengivelse.
+Endringer vises normalt etter noen få sekunder.
+
+Alle 52 lys viser fargen mens live er på. Den vanlige demo-telleren beholdes.
+Når live stoppes, viser demometeret telleren igjen. Hvis programmet eller
+nettverket stopper, går det tilbake til teller etter 15 sekunder uten en
+gyldig oppdatering. Ved omstart av enheten brukes vanlig tellervisning.
+
+Macen må være våken, kameraet tilkoblet og Particle-innloggingen gyldig.
+Programmet bruker Particle CLI-innloggingen. Ved utløpt innlogging: kjør
+particle login i terminalen. Start deretter live på nytt.
+Programmet starter ikke automatisk når Macen slås på; bruk Start live.
+
+Kamerabildene behandles lokalt i minnet. Bare fargeverdier sendes til Particle.
+Ingen video eller lyd lagres, og mikrofonen brukes ikke.
+
+Terminalalternativer:
+python3 live_color.py start
+python3 live_color.py stop
+python3 live_color.py status
+
+Krever macOS, ffmpeg, Python, numpy og Pillow; disse finnes på denne Macen.

@@ -1,0 +1,61 @@
+{
+  "version": "2026-10-23-r6",
+  "target": "Photon 2/P2, Device OS 6.3.4, NeoPixel 1.0.4",
+  "cloud_compile": "passed",
+  "firmware_tests": {
+    "passed": 10,
+    "sanitizers": [
+      "AddressSanitizer",
+      "UndefinedBehaviorSanitizer"
+    ],
+    "scope": "Actual firmware with mock hardware APIs; 60 days is simulated, not a hardware soak"
+  },
+  "color_tests": {
+    "passed": 9,
+    "scope": "Synthetic frames: colors, shading, lettering/reflections, background exclusion, ambiguous scenes, red hue wrap and brightness invariance. Real blue/green webcam frames checked locally; images not published.",
+    "local_frame_results_rgb": {
+      "blue_can": [
+        0,
+        53,
+        200
+      ],
+      "green_can": [
+        80,
+        200,
+        0
+      ],
+      "green_can_second": [
+        85,
+        200,
+        0
+      ],
+      "no_can": null
+    }
+  },
+  "deployment": {
+    "device": "LiveDemoBergen",
+    "firmware": "2026-10-23-r6",
+    "hw_wd": 1,
+    "lit_pixels": 13,
+    "brightness": 80,
+    "live_display_observed": "#068cc8",
+    "stop_restores_meter": true,
+    "timeout_restores_meter": true,
+    "user_live_check": "User confirmed switching between blue and green works; requested clearer colors. Saturation/gamma adjustment added afterwards."
+  },
+  "live_program": {
+    "sample_fps": 2,
+    "minimum_send_interval_seconds": 2,
+    "stable_color_keepalive_seconds": 5,
+    "firmware_timeout_seconds": 15,
+    "camera_frames_uploaded": false,
+    "starts_at_mac_login": false,
+    "color_rendering": "Vivid: remove neutral component and apply gamma 2.2; maximum channel 200 before firmware brightness."
+  },
+  "recorded_at": "2026-10-23T17:45:33.632862+02:00",
+  "sha256": {
+    "demometer.ino": "1c68d14e9be02ec111e900e3e0842f21240a98300c7ad2e50368adcae58258bb",
+    "live/live_color.py": "7c64557205cb3c576567ff23ae237c7ee7c699fd1b757396f78dd9c9ff450adb",
+    "firmware/2026-10-23-r6/demometer-photon2.bin": "6496f94bd717bc17a199c245cb2d0c43107364670d14381ac6c8de2e4e659ae6"
+  }
+}

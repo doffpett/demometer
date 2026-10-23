@@ -1,3 +1,73 @@
+# Demometer firmware 2026-10-23-r5
+
+Stabilitetsversjon for Photon 2/P2 med Device OS 6.3.4 og NeoPixel 1.0.4.
+Installerte filer, sjekksummer og verifikasjon ligger i
+[`firmware/2026-10-23-r5`](firmware/2026-10-23-r5).
+
+Firmwareen lagrer teller og lysstyrke i EEPROM, begrenser animasjonskøen
+og har programvare-watchdog på 60 sekunder samt maskinvare-watchdog på
+90 sekunder. Omstart etter 15 minutter sammenhengende skyfrakobling bruker
+`RESET_NO_WAIT`. Programvare-watchdog-en bruker nå 1536 byte stack.
+
+`simulate N` legger til N demoer, begrenset til ledige plasser.
+`set_fixed N` setter antall tente lys (0–51); pixel 0 er alltid av.
+`set_brightness N` begrenses til 0–120. `winning` starter fem sekunder
+konfetti; `demo_mode on/off` styrer automatisk simulering.
+`reset_state` nullstiller teller/kø, og `ping` returnerer oppetid.
+
+## Bygg og installer
+
+```sh
+mkdir -p build
+particle compile photon2 . --target 6.3.4 --saveTo build/demometer-photon2.bin
+particle get LiveDemoBergen lit_pixels
+particle get LiveDemoBergen brightness
+particle flash LiveDemoBergen firmware/2026-10-23-r5/demometer-photon2.bin
+```
+
+Vent på gjenoppkobling, og bekreft versjon, aktiv watchdog og bevart tilstand:
+
+```sh
+particle get LiveDemoBergen fw
+particle get LiveDemoBergen hw_wd
+particle get LiveDemoBergen lit_pixels
+particle get LiveDemoBergen brightness
+```
+
+`fw` skal være `2026-10-23-r5`, og `hw_wd` skal være `1`.
+Negativ `hw_wd` betyr at Device OS avviste init/start av watchdog.
+
+## Feilsøking ved langvarig drift
+
+| Variabel | Betydning |
+| --- | --- |
+| `uptime_s` | Oppetid med 64-bits tidsgrunnlag |
+| `cloud_ok`, `wifi_ok` | Rapportert sky- og Wi-Fi-forbindelse |
+| `wifi_rssi` | Wi-Fi-styrke i dBm; 0 når frakoblet |
+| `free_mem`, `min_free` | Ledig minne og laveste måling siden oppstart |
+| `offline_s`, `dropouts` | Tid uten sky og antall observerte frakoblinger siden oppstart |
+| `reset_rsn`, `reset_data` | Siste omstartsårsak og applikasjonsdata |
+| `hw_wd` | 1 når maskinvare-watchdog er startet |
+
+Ved programvarestyrt recovery er `reset_data` 1 for app-watchdog og 2 for
+15 minutter uten sky. `reset_rsn=60` betyr hardware-watchdog når plattformen
+bevarer reset-info. Photon 2 kan miste reset-info ved enkelte feil.
+
+## Tester
+
+```sh
+bash tests/run.sh
+```
+
+Testene kjører den faktiske firmwarekoden med simulerte Particle-API-er,
+nettverk, EEPROM, klokke og LED-driver, med AddressSanitizer/UndefinedBehaviorSanitizer.
+De inkluderer reconnect, offline-reset, 32-bits tidsomslag og 60 simulerte døgn.
+De beviser ikke fysisk radio-/strømstabilitet eller at hardware-watchdog resetter
+ved alle låsinger. Fysisk langtidstest gjenstår. `particle.ignore` holder
+teststubbene utenfor firmwarebyggingen.
+
+---
+
 Prosjektbeskrivelse: Avo Demometer
 Bakgrunn
 Avo Consulting ønsker å visualisere innsatsen og fremgangen i salgs- og demoinitiativer på en engasjerende måte, både internt og eksternt. For å gjøre dette har vi utviklet et fysisk "demometer" som, med lys og animasjoner, synliggjør hvor mange kundedemoer vi har gjennomført over tid.

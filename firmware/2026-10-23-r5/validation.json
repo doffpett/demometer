@@ -1,0 +1,42 @@
+{
+  "version": "2026-10-23-r5",
+  "target": "photon2 / Device OS 6.3.4",
+  "cloud_compile": "passed",
+  "binary_crc": "passed",
+  "host_tests": {
+    "watchdog": "passed",
+    "watchdog-init-failure": "passed",
+    "watchdog-start-failure": "passed",
+    "offline-recovery": "passed",
+    "offline-rollover": "passed",
+    "telemetry": "passed",
+    "animations-and-storage": "passed",
+    "60-days-idle": "passed"
+  },
+  "test_scope": "Actual firmware with mocked Particle APIs, clock, network, EEPROM and LEDs. AddressSanitizer and UndefinedBehaviorSanitizer enabled. 60 days is simulated time, not a hardware soak test.",
+  "installed_on_device": true,
+  "sha256": {
+    "demometer.ino": "b58cabd5b7fd2e338a29b1fd875650bb7e82124639429ec772cd292c62b92bd2",
+    "project.properties": "3c539badfe84ff8381341646bd36d76df4d29d285348114555ed9bc4fbd5dc49",
+    "demometer-photon2.bin": "90605312b86759c5b1d76c076d3de24fc6e77b59377b00a3483e231f795aeeaf"
+  },
+  "deployment": {
+    "device": "LiveDemoBergen",
+    "verified_at": "2026-10-23T17:22:19.966192+02:00",
+    "before": {
+      "fw": "2026-05-08-r4",
+      "lit_pixels": 13,
+      "brightness": 80,
+      "pending": 0,
+      "demo_mode": 0
+    },
+    "after": {
+      "fw": "2026-10-23-r5",
+      "hw_wd": 1,
+      "lit_pixels": 13,
+      "brightness": 80,
+      "uptime_s": 38
+    },
+    "physical_soak_test_complete": false
+  }
+}
